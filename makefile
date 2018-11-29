@@ -1,5 +1,6 @@
 # C++ Makefile Template
-# Copyright (c) 2017 Manuel Weitzman
+# Copyright (c) 2018 Ignacio Tampe
+# Based on Manuel Weitzman Makefile: https://github.com/mudetz/rcvrp/blob/master/Makefile thanks! <3
 # You may use/distribute this template under the terms of the MIT LICENSE
 
 # HowTo:
@@ -8,8 +9,8 @@
 #	In .cpp files import .h files as if they were in the same dir
 #	You have available:
 #		make			Compile binaries
-#		make install		Install final exec to /usr/bin
-#		make uninstall		Remove final exec from /usr/bin
+#		make install		Install final exec to root folder
+#		make uninstall		Remove final exec from root folder
 #		make clean		Remove intermediate .o files
 #		make distclean		Remove final executable
 #		make cleanall		clean+distclean
@@ -32,7 +33,7 @@ OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
 
 # Compiler options
 CXX = g++
-CPPFLAGS = $(addprefix -I, $(HEADDIR)) -MMD -MP
+CPPFLAGS = $(addprefix -I, $(HEADDIR)) -MMD -MP -lm
 CFLAGS = -O2 -Wall -std=c++11 -D"BENCHMARK=${BENCHMARK}"
 LDFLAGS =
 LDLIBS =
