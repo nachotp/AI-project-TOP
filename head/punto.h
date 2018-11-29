@@ -1,3 +1,5 @@
+#ifndef PUNTO_CLASS
+#define PUNTO_CLASS
 #include <iostream>
 
 class Punto {
@@ -9,3 +11,4 @@ class Punto {
 };
 
 float eucDist(Punto pto1, Punto pto2);
+#endif

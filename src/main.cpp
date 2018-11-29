@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include "punto.h"
+#include "route.h"
 
 using namespace std;
 
@@ -32,7 +33,7 @@ int main(){
         cin >> x >> y >> score;
         nodes.push_back(Punto(x,y,score));
         weights[i].resize(n);
-        weights[i][i] = 0;
+        weights[i][i] = tmax;
     }
 
     cout << "Computo de distancias." << '\n';
@@ -45,12 +46,9 @@ int main(){
         }
     }
     
-    for(size_t i = 0; i < n; ++i){
-        for(size_t j =0; j < n; ++j){
-            cout << weights[i][j] << '\t';
-        }
-        cout << '\n';
-    }    
+    Route demo = Route(n);
+    demo.generateInitial();
+    cout << demo << "Costo: " << demo.totalDistance(weights) << " Score " << demo.totalScore(nodes) << '\n';
 
     return 0;
 }
