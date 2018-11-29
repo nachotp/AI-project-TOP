@@ -1,2 +1,2 @@
 # AI-project-TOP
-An Evolutionary Algorithm aprroach to the Team Orienteering Problem
+An Evolutionary Algorithm approach to the Team Orienteering Problem
