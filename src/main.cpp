@@ -1,6 +1,7 @@
 #include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 #include <vector>
 #include "punto.h"
 
@@ -18,7 +19,7 @@ int main(){
     cin >> d >> tmax;
     d.clear();
 
-    float weights[n][n];
+    vector<vector<float> > weights(n);
 
     vector<Punto> nodes;
     cout << n << " nodos " << m << " rutas en tiempo " << tmax << '\n';
@@ -30,6 +31,7 @@ int main(){
     for(size_t i = 0; i < n; ++i){
         cin >> x >> y >> score;
         nodes.push_back(Punto(x,y,score));
+        weights[i].resize(n);
         weights[i][i] = 0;
     }
 
