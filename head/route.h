@@ -6,12 +6,12 @@
 using namespace std;
 
 typedef vector<int> route;
-typedef vector<route> cromosome;
 
 class Route {
     private:
         unsigned int n;
-        vector<int> seq;
+        float roundtime;
+        route seq;
 
     public:
         Route(int nn, bool populate);

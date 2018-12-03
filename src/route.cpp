@@ -23,6 +23,7 @@ float Route::totalDistance(vector <vector <float>> &weights){
         total += weights[seq[i]][seq[i-1]];
     }
     total += weights[seq.back()][n-1];
+    roundtime = total;
     return total;
 }
 

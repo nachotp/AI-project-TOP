@@ -15,7 +15,6 @@ int main(){
     cin.tie(NULL);
 
     srand(time(NULL));
-
     unsigned int n, m;
     float tmax;
     string d;
@@ -24,9 +23,10 @@ int main(){
     cin >> d >> tmax;
     d.clear();
 
-    vector<vector<float> > weights(n, vector<float>(n));
+    vector<vector<float>> weights(n, vector<float>(n));
 
     vector<Node> nodes;
+    
     cout << n << " nodos " << m << " rutas en tiempo " << tmax << '\n';
     float x, y;
     int score;

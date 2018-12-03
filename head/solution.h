@@ -9,13 +9,16 @@
 
 using namespace std;
 
+typedef vector<Route> cromosome;
+
 class Solution {
     private:
         int m_, n_;
-        vector<Route> routes;
+        cromosome routes;
 
     public:
         Solution(int n, int m);
+        float eval(vector<vector<float>> &weights, vector<Node> &nodes);
         friend std::ostream &operator<<(std::ostream &out, const Solution &sol);
 };
 
