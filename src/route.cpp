@@ -27,6 +27,12 @@ float Route::totalDistance(vector <vector <float>> &weights){
     return total;
 }
 
+void Route::markVisit(vector<bool> &visited){
+    for(size_t i = 0; i < seq.size(); ++i){
+        visited[i] = true;
+    }
+}
+
 int Route::totalScore(vector<Node> &nodes){
     int total = 0;
     for (int i : seq) total += nodes[i].score;
@@ -40,7 +46,7 @@ void Route::generateInitial(){
     seq.resize(rand()%seq.size() + 1);
 }
 
-std::ostream& operator<< (std::ostream &out, Route const& ruta) {
+std::ostream& operator<< (std::ostream &out, Route const& ruta){
     out << "0-";
     for (int i : ruta.seq){
         out << i << "-";

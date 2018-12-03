@@ -51,9 +51,10 @@ int main(){
 
     vector<Solution> epoch;
 
-    for (size_t i = 0; i < 1000; i++){
+    for (size_t i = 0; i < 4; i++){
         epoch.push_back(Solution(n, m));
         cout << epoch[i];
+        epoch[i].eval(weights, nodes, tmax);
     } 
     
     return 0;

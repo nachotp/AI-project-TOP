@@ -10,13 +10,14 @@ typedef vector<int> route;
 class Route {
     private:
         unsigned int n;
-        float roundtime;
         route seq;
 
     public:
         Route(int nn, bool populate);
+        float roundtime;
         void append(int elem);
         float totalDistance(vector <vector <float>> &weights);
+        void markVisit(vector<bool> &visited);
         int totalScore(vector<Node> &nodes);
         void generateInitial();
         friend std::ostream &operator<<(std::ostream &out, const Route &ruta);

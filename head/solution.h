@@ -15,10 +15,12 @@ class Solution {
     private:
         int m_, n_;
         cromosome routes;
+        float score;
+        float penalti;
 
     public:
         Solution(int n, int m);
-        float eval(vector<vector<float>> &weights, vector<Node> &nodes);
+        float eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax);
         friend std::ostream &operator<<(std::ostream &out, const Solution &sol);
 };
 
