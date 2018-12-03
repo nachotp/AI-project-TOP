@@ -1,17 +1,21 @@
 #include <iostream>
-#include <stdio.h>
-#include <stdlib.h>
 #include <string>
+#include <ctime>
+#include <cstdlib>
 #include <vector>
-#include "punto.h"
+
+#include "node.h"
 #include "route.h"
+#include "solution.h"
 
 using namespace std;
 
 int main(){
     ios_base::sync_with_stdio(false); 
     cin.tie(NULL);
-    
+
+    srand(time(NULL));
+
     unsigned int n, m;
     float tmax;
     string d;
@@ -20,9 +24,9 @@ int main(){
     cin >> d >> tmax;
     d.clear();
 
-    vector<vector<float> > weights(n);
+    vector<vector<float> > weights(n, vector<float>(n));
 
-    vector<Punto> nodes;
+    vector<Node> nodes;
     cout << n << " nodos " << m << " rutas en tiempo " << tmax << '\n';
     float x, y;
     int score;
@@ -31,8 +35,7 @@ int main(){
 
     for(size_t i = 0; i < n; ++i){
         cin >> x >> y >> score;
-        nodes.push_back(Punto(x,y,score));
-        weights[i].resize(n);
+        nodes.push_back(Node(x,y,score));
         weights[i][i] = tmax;
     }
 
@@ -45,10 +48,13 @@ int main(){
             weights[j][i] = dist;
         }
     }
-    
-    Route demo = Route(n);
-    demo.generateInitial();
-    cout << demo << "Costo: " << demo.totalDistance(weights) << " Score " << demo.totalScore(nodes) << '\n';
 
+    vector<Solution> epoch;
+
+    for (size_t i = 0; i < 1000; i++){
+        epoch.push_back(Solution(n, m));
+        cout << epoch[i];
+    } 
+    
     return 0;
 }

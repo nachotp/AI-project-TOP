@@ -1,5 +1,5 @@
 #include "route.h"
-#include "punto.h"
+#include "node.h"
 #include <vector>
 #include <iostream>
 #include <ctime> 
@@ -8,15 +8,16 @@
 
 using namespace std;
 
-Route::Route(int nn){
+Route::Route(int nn, bool populate){
     n = nn;
+    if (populate) generateInitial();
 }
 
 void Route::append(int elem){
     seq.push_back(elem);
 }
 
-float Route::totalDistance(vector <vector <float>> weights){
+float Route::totalDistance(vector <vector <float>> &weights){
     float total = weights[0][seq[0]];   
     for(size_t i = 1; i < seq.size(); ++i){
         total += weights[seq[i]][seq[i-1]];
@@ -25,24 +26,16 @@ float Route::totalDistance(vector <vector <float>> weights){
     return total;
 }
 
-int Route::totalScore(vector<Punto> nodes){
+int Route::totalScore(vector<Node> &nodes){
     int total = 0;
     for (int i : seq) total += nodes[i].score;
     return total;
 }
 
 void Route::generateInitial(){
-    srand ( unsigned ( std::time(0) ) );
     seq.resize(n-2);
-    
-    for(size_t i = 1; i < n-1; i++){
-        seq[i-1] = i;
-    }
-    for (int i : seq) cout << i << " ";
-    cout << '\n';
+    for(size_t i = 1; i < n-1; i++) seq[i-1] = i;
     random_shuffle(seq.begin(), seq.end());
-    for (int i : seq) cout << i << " ";
-    cout << '\n';
     seq.resize(rand()%seq.size() + 1);
 }
 
@@ -51,6 +44,6 @@ std::ostream& operator<< (std::ostream &out, Route const& ruta) {
     for (int i : ruta.seq){
         out << i << "-";
     }
-    out << ruta.n - 1 << '\n';
+    out << ruta.n - 1 << ' ';
     return out;
 }
