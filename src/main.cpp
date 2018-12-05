@@ -32,6 +32,7 @@ int main(){
     int score;
 
     cout << "Lectura de nodos." << '\n';
+    
 
     for(size_t i = 0; i < n; ++i){
         cin >> x >> y >> score;
@@ -51,7 +52,7 @@ int main(){
 
     vector<Solution> epoch;
 
-    for (size_t i = 0; i < 4; i++){
+    for (size_t i = 0; i < 1000; i++){
         epoch.push_back(Solution(n, m));
         cout << epoch[i];
         epoch[i].eval(weights, nodes, tmax);
