@@ -50,13 +50,28 @@ int main(){
         }
     }
 
-    vector<Solution> epoch;
+    vector<Solution> epoch, progenitors;
+    Solution best;
 
     for (size_t i = 0; i < 1000; i++){
         epoch.push_back(Solution(n, m));
-        cout << epoch[i];
+        //cout << epoch[i];
         epoch[i].eval(weights, nodes, tmax);
-    } 
-    
+    }
+
+    sort(epoch.begin(), epoch.end());
+
+    if (best < epoch.back()) best = epoch.back();
+
+    progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+100);
+    progenitors.push_back(best);
+    epoch.clear();
+
+    cout << progenitors.size() << " Progenitores\n";
+    for (Solution sol : progenitors){
+        cout << sol;
+    }
+
+
     return 0;
 }

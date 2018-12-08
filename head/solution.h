@@ -20,8 +20,11 @@ class Solution {
 
     public:
         Solution(int n, int m);
+        Solution();
         float eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax);
+        float getScore();
         friend std::ostream &operator<<(std::ostream &out, const Solution &sol);
+        friend bool operator< ( Solution const& a, Solution const& b);
 };
 
 #endif
