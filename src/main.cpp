@@ -4,6 +4,7 @@
 #include <cstdlib>
 #include <vector>
 
+#include "helper.h"
 #include "node.h"
 #include "route.h"
 #include "solution.h"
@@ -57,7 +58,7 @@ int main(){
     }
 
     vector<Solution> epoch, progenitors;
-    vector<float> cum_score;
+    vector<float> cum_score, transform_chance;
     Solution best;
 
     cout << "Pool inicial de" << INITIAL_GENE_POOL << " soluciones";
@@ -73,6 +74,7 @@ int main(){
 
             if (best < epoch.back()) best = epoch.back();
 
+            // Selección de las TOP_AMOUNT mejores soluciones
             progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+TOP_AMOUNT);
             epoch.clear();
 
@@ -80,13 +82,15 @@ int main(){
             cout << "Epoch best: " << best.getScore() << " con penalti de " << best.penalti << "\n";
             cout << progenitors.size() << " Progenitores\n";
 
-            // Generar rangos para selección por ruleta.
+            // Generar rangos para selección por ruleta
             cum_score.push_back(0);
             for (size_t i = 0; i< progenitors.size(); ++i){
                 cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
             }
 
-            int select = lower_bound(cum_score.begin(), cum_score.end(), rand() % ((int)cum_score.back() + 1)) - cum_score.begin();
+            
+
+            int select = getProgenitor(cum_score);
 
             cout << "Progenitor "<< select << '\n' << progenitors[select] << '\n';
 

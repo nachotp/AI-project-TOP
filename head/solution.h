@@ -24,8 +24,11 @@ class Solution {
         Solution();
         float eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax);
         float getScore();
+        void mutate();
         friend std::ostream &operator<<(std::ostream &out, const Solution &sol);
         friend bool operator< ( Solution const& a, Solution const& b);
 };
+
+Solution crossingOver(Solution a, Solution b);
 
 #endif

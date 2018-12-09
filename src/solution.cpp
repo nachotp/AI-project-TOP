@@ -41,6 +41,10 @@ float Solution::getScore(){
     return score - penalti;
 }
 
+void Solution::mutate(){
+
+}
+
 std::ostream &operator<<(std::ostream &out, Solution const &sol){
     for(Route rt : sol.routes){
        out << rt << '\n';
@@ -53,3 +57,7 @@ bool operator< ( Solution const& a, Solution const& b){
     float resB = b.score - b.penalti;
     return resA < resB;
 };
+
+Solution crossingOver(Solution a, Solution b){
+
+}
