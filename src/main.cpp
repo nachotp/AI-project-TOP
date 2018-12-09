@@ -8,13 +8,19 @@
 #include "route.h"
 #include "solution.h"
 
+#define INITIAL_GENE_POOL 1000
+#define TOP_AMOUNT 100
+#define MAX_GENERATIONS 1
+#define PC 0.5
+#define PM 0.3
+
 using namespace std;
 
 int main(){
     ios_base::sync_with_stdio(false); 
     cin.tie(NULL);
-
     srand(time(NULL));
+
     unsigned int n, m;
     float tmax;
     string d;
@@ -54,34 +60,37 @@ int main(){
     vector<float> cum_score;
     Solution best;
 
-    for (size_t i = 0; i < 1000; i++){
+    cout << "Pool inicial de" << INITIAL_GENE_POOL << " soluciones";
+    for (size_t i = 0; i < INITIAL_GENE_POOL; i++){
         epoch.push_back(Solution(n, m));
         //cout << epoch[i];
         epoch[i].eval(weights, nodes, tmax);
     }
 
-    sort(epoch.begin(), epoch.end());
+    for(size_t gen = 0; gen < MAX_GENERATIONS; ++gen){
 
-    if (best < epoch.back()) best = epoch.back();
+         sort(epoch.begin(), epoch.end());
 
-    progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+100);
-    epoch.clear();
+            if (best < epoch.back()) best = epoch.back();
 
-    progenitors.push_back(best);
-    cout << "Epoch best: " << best.getScore() << " con penalti de " << best.penalti << "\n";
+            progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+TOP_AMOUNT);
+            epoch.clear();
 
-    cout << progenitors.size() << " Progenitores\n";
+            progenitors.push_back(best);
+            cout << "Epoch best: " << best.getScore() << " con penalti de " << best.penalti << "\n";
+            cout << progenitors.size() << " Progenitores\n";
 
-    cum_score.push_back(0);
+            // Generar rangos para selección por ruleta.
+            cum_score.push_back(0);
+            for (size_t i = 0; i< progenitors.size(); ++i){
+                cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
+            }
 
-    for (size_t i = 0; i< progenitors.size(); ++i){
-        cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
+            int select = lower_bound(cum_score.begin(), cum_score.end(), rand() % ((int)cum_score.back() + 1)) - cum_score.begin();
+
+            cout << "Progenitor "<< select << '\n' << progenitors[select] << '\n';
+
     }
-
-
-    int select = lower_bound(cum_score.begin(), cum_score.end(), rand() % (int)cum_score.back() + 1) - cum_score.begin();
-    
-    cout << "Progenitor "<< select << '\n' << progenitors[select] << '\n';
 
     return 0;
 }
