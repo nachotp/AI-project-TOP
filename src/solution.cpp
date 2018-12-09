@@ -11,7 +11,7 @@ using namespace std;
 
 Solution::Solution(){
     score = -numeric_limits<float>::max();
-    routes = vector<Route>();
+    routes = cromosome();
 }
 
 Solution::Solution(int n, int m){
@@ -34,7 +34,7 @@ float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tm
     for (Route rt : routes){
         rt.totalDistance(weights);
         rt.markVisit(visited);
-        penalti -= min((float)0, tmax - rt.roundtime);
+        penalti -= 2*min((float)0, tmax - rt.roundtime);
     }
 
     
@@ -64,9 +64,9 @@ bool operator< ( Solution const& a, Solution const& b){
     return resA < resB;
 };
 
-Solution Solution::crossOver(Solution b){
+Solution Solution::crossOver(Solution &b){
     int slice = rand() % (m_-1) + 1;
-    cromosome new_routes;
+    cromosome new_routes = cromosome();
     for (int i = 0; i < m_; ++i){
         new_routes.push_back((i < slice)? routes[i] : b.routes[i]);
     }

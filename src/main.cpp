@@ -9,17 +9,15 @@
 #include "route.h"
 #include "solution.h"
 
-#define INITIAL_GENE_POOL 1000
+#define GENE_POOL_SIZE 1000
 #define TOP_AMOUNT 100
-#define MAX_GENERATIONS 1
+#define MAX_GENERATIONS 10
 #define PC 0.25
 #define PM 0.11
 
 using namespace std;
 
 int main(){
-    ios_base::sync_with_stdio(false); 
-    cin.tie(NULL);
     srand(time(NULL));
 
     unsigned int n, m;
@@ -34,12 +32,9 @@ int main(){
 
     vector<Node> nodes;
     
-    cout << n << " nodos " << m << " rutas en tiempo " << tmax << '\n';
+    cout << n << " nodes " << m << " routes in " << tmax << " time units\n";
     float x, y;
     int score;
-
-    cout << "Lectura de nodos." << '\n';
-    
 
     for(size_t i = 0; i < n; ++i){
         cin >> x >> y >> score;
@@ -47,7 +42,6 @@ int main(){
         weights[i][i] = tmax;
     }
 
-    cout << "Computo de distancias." << '\n';
     float dist;
     for(size_t i = 0; i < n; ++i){
         for(size_t j = i+1; j < n; ++j){
@@ -61,43 +55,65 @@ int main(){
     vector<float> cum_score, transform_chance;
     Solution best;
 
-    cout << "Pool inicial de " << INITIAL_GENE_POOL << " soluciones\n";
-    for (size_t i = 0; i < INITIAL_GENE_POOL; i++){
+    cout << "Initial gene pool of " << GENE_POOL_SIZE << " solutions\n";
+    for (size_t i = 0; i < GENE_POOL_SIZE; i++){
         epoch.push_back(Solution(n, m));
-        //cout << epoch[i];
         epoch[i].eval(weights, nodes, tmax);
     }
 
     for(size_t gen = 0; gen < MAX_GENERATIONS; ++gen){
-        cout << "Epoch " << gen << ":\n";
-         sort(epoch.begin(), epoch.end());
+        cout << "Epoch " << gen << ": "<< epoch.size() << " candidates\n";
+        sort(epoch.begin(), epoch.end());
 
-        if (best < epoch.back()) best = epoch.back();
+        // Store global best solution to assure no quality loss
+        if (gen == 0 || best < epoch.back()) best = epoch.back();
 
-        // Selección de las TOP_AMOUNT mejores soluciones
+        // TOP_AMOUNT highest ranked solutions
         progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+TOP_AMOUNT);
-        epoch.clear();
+        epoch = vector<Solution>();
+        epoch.reserve(GENE_POOL_SIZE);
 
         progenitors.push_back(best);
-        cout << "  - Best: " << best.getScore() << " con penalti de " << best.penalti << "\n";
+        cout << "  - Best: " << best.getScore() << " with " << best.penalti << " penalti\n";
 
-        // Generar rangos para selección por ruleta
-        cum_score.push_back(0);
-        for (size_t i = 0; i< progenitors.size(); ++i){
+        // cumulative score for rulette selection
+        cum_score = vector<float>();
+        cum_score.push_back(progenitors[0].getScore());
+        for (size_t i = 1; i< progenitors.size(); ++i){
             cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
         }
 
-        transform_chance = generateProbVector(progenitors.size());
-        int select = getProgenitor(cum_score);
-        int select2 = getProgenitor(cum_score);
-        
-        cout << "Progenitor " << select << '\n' << progenitors[select] << '\n';
-        
-        cout << "Progenitor " << select2 << '\n' << progenitors[select2] << '\n';
+        cout << "  - cumulative score: 0-"<<cum_score.back() << " of size " << cum_score.size() << '\n';
 
-        cout << "Hijo 1 \n" <<  progenitors[select].crossOver(progenitors[select2]);
-        cout << "Hijo 2 \n" <<  progenitors[select2].crossOver(progenitors[select]);
+        transform_chance = generateProbVector(progenitors.size());
+
+        int select, select2;
+        // Crossing over
+        while (epoch.size() < GENE_POOL_SIZE-TOP_AMOUNT){
+            select = getProgenitor(cum_score);
+            while (transform_chance[select] > PC) select = getProgenitor(cum_score);
+
+            select2 = getProgenitor(cum_score);
+            while (transform_chance[select2] > PC || select == select2) select2 = getProgenitor(cum_score);
+
+            epoch.push_back(progenitors[select].crossOver(progenitors[select2]));
+            epoch.back().eval(weights, nodes, tmax);
+
+            epoch.push_back(progenitors[select2].crossOver(progenitors[select]));
+            epoch.back().eval(weights, nodes, tmax);
+            cout << "-";
+        }
+        cout << endl << epoch.size() << endl;
     }
+    
+    cout << "FINAL SOLUTIONS:\n";
+    for (Solution sol : epoch){
+        cout << sol;
+    }
+    cout << '\n';
+    epoch.clear();
+    progenitors.clear();
+
 
     return 0;
 }
