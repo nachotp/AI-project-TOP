@@ -72,14 +72,16 @@ int main(){
 
     cout << progenitors.size() << " Progenitores\n";
 
-    cum_score.push_back(progenitors.front().getScore());
+    cum_score.push_back(0);
 
-    for (size_t i = 1; i< progenitors.size(); ++i){
-        cum_score.push_back(cum_score.back() + progenitors[i].getScore());
+    for (size_t i = 0; i< progenitors.size(); ++i){
+        cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
     }
 
-    for (float range : cum_score) cout << range << "-";
-    cout << '\n';
+
+    int select = lower_bound(cum_score.begin(), cum_score.end(), rand() % (int)cum_score.back() + 1) - cum_score.begin();
+    
+    cout << "Progenitor "<< select << '\n' << progenitors[select] << '\n';
 
     return 0;
 }
