@@ -16,9 +16,10 @@ class Solution {
         int m_, n_;
         cromosome routes;
         float score;
-        float penalti;
 
     public:
+        float penalti;
+
         Solution(int n, int m);
         Solution();
         float eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax);

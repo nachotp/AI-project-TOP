@@ -51,6 +51,7 @@ int main(){
     }
 
     vector<Solution> epoch, progenitors;
+    vector<float> cum_score;
     Solution best;
 
     for (size_t i = 0; i < 1000; i++){
@@ -64,14 +65,21 @@ int main(){
     if (best < epoch.back()) best = epoch.back();
 
     progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+100);
-    progenitors.push_back(best);
     epoch.clear();
 
+    progenitors.push_back(best);
+    cout << "Epoch best: " << best.getScore() << " con penalti de " << best.penalti << "\n";
+
     cout << progenitors.size() << " Progenitores\n";
-    for (Solution sol : progenitors){
-        cout << sol;
+
+    cum_score.push_back(progenitors.front().getScore());
+
+    for (size_t i = 1; i< progenitors.size(); ++i){
+        cum_score.push_back(cum_score.back() + progenitors[i].getScore());
     }
 
+    for (float range : cum_score) cout << range << "-";
+    cout << '\n';
 
     return 0;
 }
