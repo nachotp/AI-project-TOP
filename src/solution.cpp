@@ -21,6 +21,12 @@ Solution::Solution(int n, int m){
         routes.push_back(Route(n_, true));
 }
 
+Solution::Solution(int n, int m, cromosome cross_result){
+    m_ = m;
+    n_ = n;
+    routes = cross_result;
+}
+
 float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax){
     vector<bool> visited = vector<bool>(n_, 0);
     score = 0;
@@ -58,6 +64,12 @@ bool operator< ( Solution const& a, Solution const& b){
     return resA < resB;
 };
 
-Solution crossingOver(Solution a, Solution b){
-    return Solution();
+Solution Solution::crossOver(Solution b){
+    int slice = rand() % (m_-1) + 1;
+    cromosome new_routes;
+    for (int i = 0; i < m_; ++i){
+        new_routes.push_back((i < slice)? routes[i] : b.routes[i]);
+    }
+
+    return Solution(n_, m_, new_routes);
 }
