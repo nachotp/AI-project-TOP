@@ -101,19 +101,12 @@ int main(){
 
             epoch.push_back(progenitors[select2].crossOver(progenitors[select]));
             epoch.back().eval(weights, nodes, tmax);
-            cout << "-";
         }
-        cout << endl << epoch.size() << endl;
-    }
-    
-    cout << "FINAL SOLUTIONS:\n";
-    for (Solution sol : epoch){
-        cout << sol;
-    }
-    cout << '\n';
-    epoch.clear();
-    progenitors.clear();
 
+    }
+
+    sort(epoch.begin(), epoch.end());
+    cout << '\n' << "BEST SOLUTION: " << epoch.back().getScore() << '\n' << epoch.back() << '\n';
 
     return 0;
 }
