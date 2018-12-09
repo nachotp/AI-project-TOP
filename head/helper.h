@@ -6,4 +6,6 @@ using namespace std;
 
 int getProgenitor(vector<float> &cum_score);
 
+vector<float> generateProbVector(int n);
+
 #endif

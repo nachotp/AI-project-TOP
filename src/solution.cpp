@@ -59,5 +59,5 @@ bool operator< ( Solution const& a, Solution const& b){
 };
 
 Solution crossingOver(Solution a, Solution b){
-
+    return Solution();
 }

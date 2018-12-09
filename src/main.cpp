@@ -88,9 +88,9 @@ int main(){
                 cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
             }
 
-            
-
+            transform_chance = generateProbVector(progenitors.size());
             int select = getProgenitor(cum_score);
+            
 
             cout << "Progenitor "<< select << '\n' << progenitors[select] << '\n';
 
