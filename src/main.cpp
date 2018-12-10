@@ -11,9 +11,10 @@
 
 #define GENE_POOL_SIZE 1000
 #define TOP_AMOUNT 100
-#define MAX_GENERATIONS 10
-#define PC 0.25
-#define PM 0.11
+#define MAX_GENERATIONS 100
+#define PC 0.3
+#define PM 0.2
+#define PENALTI 5
 
 using namespace std;
 
@@ -58,7 +59,7 @@ int main(){
     cout << "Initial gene pool of " << GENE_POOL_SIZE << " solutions\n";
     for (size_t i = 0; i < GENE_POOL_SIZE; i++){
         epoch.push_back(Solution(n, m));
-        epoch[i].eval(weights, nodes, tmax);
+        epoch[i].eval(weights, nodes, tmax, PENALTI);
     }
 
     for(size_t gen = 0; gen < MAX_GENERATIONS; ++gen){
@@ -98,10 +99,10 @@ int main(){
             while (transform_chance[select2] > PC || select == select2) select2 = getProgenitor(cum_score);
 
             epoch.push_back(progenitors[select].crossOver(progenitors[select2]));
-            epoch.back().eval(weights, nodes, tmax);
+            epoch.back().eval(weights, nodes, tmax, PENALTI);
 
             epoch.push_back(progenitors[select2].crossOver(progenitors[select]));
-            epoch.back().eval(weights, nodes, tmax);
+            epoch.back().eval(weights, nodes, tmax, PENALTI);
         }
 
         // Mutation
@@ -110,7 +111,7 @@ int main(){
         for (size_t i = 0; i < epoch.size(); i++) {
             if (transform_chance[i] < PM){
                 epoch[i].mutate();
-                epoch[i].eval(weights, nodes, tmax);
+                epoch[i].eval(weights, nodes, tmax, PENALTI);
                 mut_amount++;
             }
             

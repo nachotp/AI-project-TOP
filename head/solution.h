@@ -23,7 +23,7 @@ class Solution {
         Solution(int n, int m);
         Solution(int n, int m, cromosome cross_result);
         Solution();
-        float eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax);
+        float eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax, int penalti_multiplier);
         float getScore();
         void mutate();
         void seqFlipMutator();

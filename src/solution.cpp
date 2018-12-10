@@ -27,14 +27,14 @@ Solution::Solution(int n, int m, cromosome cross_result){
     routes = cross_result;
 }
 
-float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax){
+float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax, int penalti_multiplier){
     vector<bool> visited = vector<bool>(n_, 0);
     score = 0;
     penalti = 0;
     for (Route rt : routes){
         rt.totalDistance(weights);
         rt.markVisit(visited);
-        penalti -= 2*min((float)0, tmax - rt.roundtime);
+        penalti -= penalti_multiplier*min((float)0, tmax - rt.roundtime);
     }
 
     
