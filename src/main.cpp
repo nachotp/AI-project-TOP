@@ -121,6 +121,7 @@ int main(){
     }
 
     sort(epoch.begin(), epoch.end());
+    cerr << "BEST SOLUTION: " << epoch.back().getScore() << '\n' << epoch.back() << "Penalti: " << epoch.back().penalti << '\n';
     cout << '\n' << "BEST SOLUTION: " << epoch.back().getScore() << '\n' << epoch.back() << '\n';
 
     return 0;
