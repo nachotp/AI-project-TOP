@@ -62,7 +62,7 @@ int main(){
     }
 
     for(size_t gen = 0; gen < MAX_GENERATIONS; ++gen){
-        cout << "Epoch " << gen << ": "<< epoch.size() << " candidates\n";
+        cout << "Epoch " << gen+1 << ": "<< epoch.size() << " candidates\n";
         sort(epoch.begin(), epoch.end());
 
         // Store global best solution to assure no quality loss
@@ -70,8 +70,8 @@ int main(){
 
         // TOP_AMOUNT highest ranked solutions
         progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+TOP_AMOUNT);
-        epoch = vector<Solution>();
-        epoch.reserve(GENE_POOL_SIZE);
+        epoch = vector<Solution>(progenitors);
+        epoch.reserve(GENE_POOL_SIZE-TOP_AMOUNT);
 
         progenitors.push_back(best);
         cout << "  - Best: " << best.getScore() << " with " << best.penalti << " penalti\n";
@@ -88,8 +88,9 @@ int main(){
         transform_chance = generateProbVector(progenitors.size());
 
         int select, select2;
+
         // Crossing over
-        while (epoch.size() < GENE_POOL_SIZE-TOP_AMOUNT){
+        while (epoch.size() < GENE_POOL_SIZE-1){
             select = getProgenitor(cum_score);
             while (transform_chance[select] > PC) select = getProgenitor(cum_score);
 
@@ -103,6 +104,19 @@ int main(){
             epoch.back().eval(weights, nodes, tmax);
         }
 
+        // Mutation
+        transform_chance = generateProbVector(epoch.size());
+        int mut_amount = 0;
+        for (size_t i = 0; i < epoch.size(); i++) {
+            if (transform_chance[i] < PM){
+                epoch[i].mutate();
+                epoch[i].eval(weights, nodes, tmax);
+                mut_amount++;
+            }
+            
+        }
+
+        cout << "  - " << mut_amount << " mutations\n";
     }
 
     sort(epoch.begin(), epoch.end());

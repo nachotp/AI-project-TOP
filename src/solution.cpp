@@ -46,9 +46,25 @@ float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tm
 float Solution::getScore(){
     return score - penalti;
 }
-
+ 
 void Solution::mutate(){
+    switch(rand() % pos_mutations){
+        case 0: seqFlipMutator();
+                break;
+    }
+}
 
+void Solution::seqFlipMutator(){
+    int flipping = rand() % m_;
+    if (routes[flipping].size() > 1){
+        int min = rand() % (routes[flipping].size() - 1), max;
+        do {
+            max = rand() % routes[flipping].size();
+        } while (max <= min);
+
+        routes[flipping].flipSeq(min, max);
+    }
+    
 }
 
 std::ostream &operator<<(std::ostream &out, Solution const &sol){

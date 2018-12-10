@@ -17,6 +17,14 @@ void Route::append(int elem){
     seq.push_back(elem);
 }
 
+int Route::size(){
+    return seq.size();
+}
+
+void Route::flipSeq(int from, int to){
+    reverse(seq.begin()+from, seq.begin()+to);
+}
+
 float Route::totalDistance(vector <vector <float>> &weights){
     float total = weights[0][seq[0]];   
     for(size_t i = 1; i < seq.size(); ++i){
@@ -31,12 +39,6 @@ void Route::markVisit(vector<bool> &visited){
     for(size_t i = 0; i < seq.size(); ++i){
         visited[i] = true;
     }
-}
-
-int Route::totalScore(vector<Node> &nodes){
-    int total = 0;
-    for (int i : seq) total += nodes[i].score;
-    return total;
 }
 
 void Route::generateInitial(){

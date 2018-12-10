@@ -19,6 +19,8 @@ class Route {
         float totalDistance(vector <vector <float>> &weights);
         void markVisit(vector<bool> &visited);
         int totalScore(vector<Node> &nodes);
+        int size();
+        void flipSeq(int from, int to);
         void generateInitial();
         friend std::ostream &operator<<(std::ostream &out, const Route &ruta);
 };
