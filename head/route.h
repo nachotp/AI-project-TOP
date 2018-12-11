@@ -22,6 +22,7 @@ class Route {
         int totalScore(vector<Node> &nodes);
         int size();
         void flipSeq(int from, int to);
+        void reduceSeq(vector<vector<float>> &weights, float tmax);
         void generateInitial();
         friend std::ostream &operator<<(std::ostream &out, const Route &ruta);
 };
