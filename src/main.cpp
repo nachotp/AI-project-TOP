@@ -9,12 +9,12 @@
 #include "route.h"
 #include "solution.h"
 
-#define GENE_POOL_SIZE 1000
+#define GENE_POOL_SIZE 10000
 #define TOP_AMOUNT 100
-#define MAX_GENERATIONS 100
-#define PC 0.3
-#define PM 0.2
-#define PENALTI 5
+#define MAX_GENERATIONS 50
+#define PC 0.4
+#define PM 0.3
+#define PENALTI 10
 
 using namespace std;
 
@@ -53,7 +53,8 @@ int main(){
     }
 
     vector<Solution> epoch, progenitors;
-    vector<float> cum_score, transform_chance;
+    vector<double> cum_score;
+    vector<float> transform_chance;
     Solution best;
 
     cout << "Initial gene pool of " << GENE_POOL_SIZE << " solutions\n";
@@ -78,7 +79,7 @@ int main(){
         cout << "  - Best: " << best.getScore() << " with " << best.penalti << " penalti\n";
 
         // cumulative score for rulette selection
-        cum_score = vector<float>();
+        cum_score = vector<double>();
         cum_score.push_back(progenitors[0].getScore());
         for (size_t i = 1; i< progenitors.size(); ++i){
             cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
@@ -116,6 +117,11 @@ int main(){
             }
             
         }
+
+        epoch.push_back(best);
+        epoch.back().mutate(weights, tmax);
+        epoch.back().eval(weights, nodes, tmax, PENALTI);
+        mut_amount++;
 
         cout << "  - " << mut_amount << " mutations\n";
     }

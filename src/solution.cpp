@@ -34,6 +34,7 @@ float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tm
     score = 0;
     penalti = 0;
     for (Route rt : routes){
+        if (rt.size() == 0) exit(1);
         rt.totalDistance(weights);
         rt.markVisit(visited);
         distances.push_back(rt.roundtime);
@@ -52,23 +53,35 @@ float Solution::getScore(){
 void Solution::mutate(vector<vector<float>> weights, float &tmax){
     switch(rand() % pos_mutations){
         case 0: 
-            seqFlipMutator();
+            seqModMutator(0);
             break;
         case 1:
+            seqModMutator(1);
+            break;
+        case 2:
             lengthFixingMutator(weights, tmax);
             break;
     }
 }
 
-void Solution::seqFlipMutator(){
-    int flipping = rand() % m_;
-    if (routes[flipping].size() > 1){
-        int min = rand() % (routes[flipping].size() - 1), max;
+void Solution::seqModMutator(int type){
+    int modding = rand() % m_;
+    if (routes[modding].size() > 1){
+        int min = rand() % (routes[modding].size() - 1), max;
         do {
-            max = rand() % routes[flipping].size();
+            max = rand() % routes[modding].size();
         } while (max <= min);
 
-        routes[flipping].flipSeq(min, max);
+        
+        switch (type) {
+            case 0:
+                routes[modding].flipSeq(min, max);
+                break;
+            case 1:
+                routes[modding].scrambleSeq(min, max);
+                break;
+        }
+        
     }
 }
 
@@ -102,3 +115,4 @@ Solution Solution::crossOver(Solution &b){
 
     return Solution(n_, m_, new_routes);
 }
+ 
