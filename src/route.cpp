@@ -25,6 +25,10 @@ void Route::flipSeq(int from, int to){
     reverse(seq.begin()+from, seq.begin()+to);
 }
 
+void Route::reduceSeq(vector<vector<float>> &weights, float tmax){
+    
+}
+
 float Route::totalDistance(vector <vector <float>> &weights){
     float total = weights[0][seq[0]];   
     for(size_t i = 1; i < seq.size(); ++i){

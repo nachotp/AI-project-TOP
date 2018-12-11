@@ -13,9 +13,11 @@ typedef vector<Route> cromosome;
 
 class Solution {
     private:
-        static const int pos_mutations = 1;
+        static const int pos_mutations = 2;
         int m_, n_;
         float score;
+        vector<bool> visited;
+        vector<int> distances;
 
     public:
         cromosome routes;
@@ -25,9 +27,10 @@ class Solution {
         Solution();
         float eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax, int penalti_multiplier);
         float getScore();
-        void mutate();
-        void seqFlipMutator();
         Solution crossOver(Solution &b);
+        void mutate(vector<vector<float>> weights, float &tmax);
+        void seqFlipMutator();
+        void lengthFixingMutator(vector<vector<float>> weights, float &tmax);
         friend std::ostream &operator<<(std::ostream &out, const Solution &sol);
         friend bool operator< ( Solution const& a, Solution const& b);
 };

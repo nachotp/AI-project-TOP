@@ -13,10 +13,11 @@ class Route {
         route seq;
 
     public:
-        Route(int nn, bool populate);
         float roundtime;
+        
+        Route(int nn, bool populate);
         void append(int elem);
-        float totalDistance(vector <vector <float>> &weights);
+        float totalDistance(vector<vector<float>> &weights);
         void markVisit(vector<bool> &visited);
         int totalScore(vector<Node> &nodes);
         int size();

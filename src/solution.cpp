@@ -28,16 +28,18 @@ Solution::Solution(int n, int m, cromosome cross_result){
 }
 
 float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax, int penalti_multiplier){
-    vector<bool> visited = vector<bool>(n_, 0);
+    visited = vector<bool>(n_, 0);
+    distances = vector<int>();
+    distances.reserve(m_);
     score = 0;
     penalti = 0;
     for (Route rt : routes){
         rt.totalDistance(weights);
         rt.markVisit(visited);
+        distances.push_back(rt.roundtime);
         penalti -= penalti_multiplier*min((float)0, tmax - rt.roundtime);
     }
 
-    
     for(int i = 1; i < n_; i++) score += visited[i]*nodes[i].score;
 
     return score-penalti;
@@ -47,10 +49,14 @@ float Solution::getScore(){
     return score - penalti;
 }
  
-void Solution::mutate(){
+void Solution::mutate(vector<vector<float>> weights, float &tmax){
     switch(rand() % pos_mutations){
-        case 0: seqFlipMutator();
-                break;
+        case 0: 
+            seqFlipMutator();
+            break;
+        case 1:
+            lengthFixingMutator(weights, tmax);
+            break;
     }
 }
 
@@ -64,7 +70,14 @@ void Solution::seqFlipMutator(){
 
         routes[flipping].flipSeq(min, max);
     }
-    
+}
+
+void Solution::lengthFixingMutator(vector<vector<float>> weights, float &tmax){
+    int max = max_element(distances.begin(), distances.end()) - distances.begin();
+    if (distances[max] > tmax){
+        routes[max].reduceSeq(weights, tmax);
+    }
+
 }
 
 std::ostream &operator<<(std::ostream &out, Solution const &sol){

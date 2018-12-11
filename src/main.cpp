@@ -110,7 +110,7 @@ int main(){
         int mut_amount = 0;
         for (size_t i = 0; i < epoch.size(); i++) {
             if (transform_chance[i] < PM){
-                epoch[i].mutate();
+                epoch[i].mutate(weights, tmax);
                 epoch[i].eval(weights, nodes, tmax, PENALTI);
                 mut_amount++;
             }
