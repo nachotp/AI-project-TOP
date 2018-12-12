@@ -53,20 +53,37 @@ void Route::reduceSeq(vector<vector<float>> &weights, float tmax){
     }
 }
 
-float Route::totalDistance(vector <vector <float>> &weights){
+void Route::expandSeq(vector<vector<float>> &weights, vector<bool> visited, float tmax){
+    int pos;
+    int idx;
+    do {
+        pos = rand() % n;
+    } while (visited[pos]);
 
-    float total = weights[0][seq[0]];   
-    for(size_t i = 1; i < seq.size(); ++i){
-        total += weights[seq[i]][seq[i-1]];
+    float min = tmax;
+
+    for (int node : seq){
+        if (weights[node][pos] < min){
+            min = weights[node][pos];
+            idx = node;
+        }
     }
-    total += weights[seq.back()][n-1];
-    roundtime = total;
-    return total;
+    idx = find(seq.begin(), seq.end(), idx) - seq.begin();
+    seq.insert(seq.begin()+idx, pos);
+}
+
+float Route::totalDistance(vector <vector <float>> &weights){
+    roundtime = weights[0][seq[0]];
+    for(size_t i = 1; i < seq.size(); ++i){
+        roundtime += weights[seq[i-1]][seq[i]];
+    }
+    roundtime += weights[seq.back()].back();
+    return roundtime;
 }
 
 void Route::markVisit(vector<bool> &visited){
-    for(size_t i = 0; i < seq.size(); ++i){
-        visited[seq[i]] = true;
+    for(int i : seq){
+        visited[i] = true;
     }
 }
 
@@ -77,11 +94,11 @@ void Route::generateInitial(){
     seq.resize(rand()%seq.size() + 1);
 }
 
-std::ostream& operator<< (std::ostream &out, Route const& ruta){
-    out << "0-";
-    for (int i : ruta.seq){
-        out << i << "-";
+std::ostream& operator<< (std::ostream &out, Route const& rt){
+    out << "1 ";
+    for (int i : rt.seq){
+        out << i+1<< " ";
     }
-    out << ruta.n - 1 << ' ';
+    out << rt.n;
     return out;
 }

@@ -17,9 +17,10 @@ class Solution {
         int m_, n_;
         float score;
         vector<bool> visited;
-        vector<int> distances;
+        
 
     public:
+        vector<float> distances;
         cromosome routes;
         float penalti;
         Solution(int n, int m);
@@ -32,7 +33,7 @@ class Solution {
         void seqModMutator(int type);
         void lengthFixingMutator(vector<vector<float>> weights, float &tmax);
         friend std::ostream &operator<<(std::ostream &out, const Solution &sol);
-        friend bool operator< ( Solution const& a, Solution const& b);
+        friend bool operator<(Solution const &a, Solution const &b);
 };
 
 #endif

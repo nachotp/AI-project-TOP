@@ -29,16 +29,17 @@ Solution::Solution(int n, int m, cromosome cross_result){
 
 float Solution::eval(vector<vector<float>> &weights, vector<Node> &nodes, int tmax, int penalti_multiplier){
     visited = vector<bool>(n_, 0);
-    distances = vector<int>();
+    distances = vector<float>();
     distances.reserve(m_);
     score = 0;
     penalti = 0;
     for (Route rt : routes){
         if (rt.size() == 0) exit(1);
-        rt.totalDistance(weights);
+        float dist = rt.totalDistance(weights);
         rt.markVisit(visited);
-        distances.push_back(rt.roundtime);
-        penalti -= penalti_multiplier*min((float)0, tmax - rt.roundtime);
+        distances.push_back(dist);
+        if (tmax < dist)
+            penalti += penalti_multiplier * dist;
     }
 
     for(int i = 1; i < n_; i++) score += visited[i]*nodes[i].score;
@@ -87,15 +88,31 @@ void Solution::seqModMutator(int type){
 
 void Solution::lengthFixingMutator(vector<vector<float>> weights, float &tmax){
     int max = max_element(distances.begin(), distances.end()) - distances.begin();
+    int min = min_element(distances.begin(), distances.end()) - distances.begin();
     if (distances[max] > tmax){
         routes[max].reduceSeq(weights, tmax);
+    } else if (distances[min] < tmax){
+        visited = vector<bool>(n_, 0);
+        for (Route rt : routes) rt.markVisit(visited);
+        routes[min].expandSeq(weights, visited, tmax);
     }
 
 }
 
+Solution Solution::crossOver(Solution &b){
+    int slice = rand() % (m_ - 1) + 1;
+    cromosome new_routes = cromosome();
+    for (int i = 0; i < m_; ++i) {
+        new_routes.push_back((i < slice) ? routes[i] : b.routes[i]);
+    }
+
+    return Solution(n_, m_, new_routes);
+}
+
 std::ostream &operator<<(std::ostream &out, Solution const &sol){
-    for(Route rt : sol.routes){
-       out << rt << '\n';
+    for(size_t i = 0; i < sol.routes.size(); ++i){
+        out << sol.distances[i] << " ";
+        out << sol.routes[i] << '\n';
     }
     return out;
 }
@@ -105,14 +122,3 @@ bool operator< ( Solution const& a, Solution const& b){
     float resB = b.score - b.penalti;
     return resA < resB;
 };
-
-Solution Solution::crossOver(Solution &b){
-    int slice = rand() % (m_-1) + 1;
-    cromosome new_routes = cromosome();
-    for (int i = 0; i < m_; ++i){
-        new_routes.push_back((i < slice)? routes[i] : b.routes[i]);
-    }
-
-    return Solution(n_, m_, new_routes);
-}
- 

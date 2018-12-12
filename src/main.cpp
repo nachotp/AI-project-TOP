@@ -9,7 +9,7 @@
 #include "route.h"
 #include "solution.h"
 
-#define GENE_POOL_SIZE 10000
+#define GENE_POOL_SIZE 5000
 #define TOP_AMOUNT 100
 #define MAX_GENERATIONS 50
 #define PC 0.4
@@ -33,7 +33,7 @@ int main(){
 
     vector<Node> nodes;
     
-    cout << n << " nodes " << m << " routes in " << tmax << " time units\n";
+    cerr << n << " nodes " << m << " routes in " << tmax << " time units\n";
     float x, y;
     int score;
 
@@ -57,14 +57,14 @@ int main(){
     vector<float> transform_chance;
     Solution best;
 
-    cout << "Initial gene pool of " << GENE_POOL_SIZE << " solutions\n";
+    //cout << "Initial gene pool of " << GENE_POOL_SIZE << " solutions\n";
     for (size_t i = 0; i < GENE_POOL_SIZE; i++){
         epoch.push_back(Solution(n, m));
         epoch[i].eval(weights, nodes, tmax, PENALTI);
     }
 
     for(size_t gen = 0; gen < MAX_GENERATIONS; ++gen){
-        cout << "Epoch " << gen+1 << ": "<< epoch.size() << " candidates\n";
+        //cout << "Epoch " << gen+1 << ": "<< epoch.size() << " candidates\n";
         sort(epoch.begin(), epoch.end());
 
         // Store global best solution to assure no quality loss
@@ -76,7 +76,7 @@ int main(){
         epoch.reserve(GENE_POOL_SIZE-TOP_AMOUNT);
 
         progenitors.push_back(best);
-        cout << "  - Best: " << best.getScore() << " with " << best.penalti << " penalti\n";
+        //cout << "  - Best: " << best.getScore() << " with " << best.penalti << " penalti\n";
 
         // cumulative score for rulette selection
         cum_score = vector<double>();
@@ -85,7 +85,7 @@ int main(){
             cum_score.push_back(cum_score.back() + abs(progenitors[i].getScore()));
         }
 
-        cout << "  - cumulative score: 0-"<<cum_score.back() << " of size " << cum_score.size() << '\n';
+        //cout << "  - cumulative score: 0-"<<cum_score.back() << " of size " << cum_score.size() << '\n';
 
         transform_chance = generateProbVector(progenitors.size());
 
@@ -123,12 +123,13 @@ int main(){
         epoch.back().eval(weights, nodes, tmax, PENALTI);
         mut_amount++;
 
-        cout << "  - " << mut_amount << " mutations\n";
+        // cout << "  - " << mut_amount << " mutations\n";
     }
 
     sort(epoch.begin(), epoch.end());
     cerr << "BEST SOLUTION: " << epoch.back().getScore() << '\n' << epoch.back() << "Penalti: " << epoch.back().penalti << '\n';
-    cout << '\n' << "BEST SOLUTION: " << epoch.back().getScore() << '\n' << epoch.back() << '\n';
+
+    cout << epoch.back().getScore() << '\n' << epoch.back();
 
     return 0;
 }

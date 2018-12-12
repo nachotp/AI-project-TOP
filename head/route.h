@@ -24,7 +24,8 @@ class Route {
         void flipSeq(int from, int to);
         void scrambleSeq(int from, int to);
         void reduceSeq(vector<vector<float>> &weights, float tmax);
+        void expandSeq(vector<vector<float>> &weights, vector<bool> visited, float tmax);
         void generateInitial();
-        friend std::ostream &operator<<(std::ostream &out, const Route &ruta);
+        friend std::ostream &operator<<(std::ostream &out, const Route &rt);
 };
 #endif
