@@ -12,8 +12,8 @@
 #define GENE_POOL_SIZE 5000
 #define TOP_AMOUNT 100
 #define MAX_GENERATIONS 50
-#define PC 0.4
-#define PM 0.3
+#define PC 0.3
+#define PM 0.2
 #define PENALTI 10
 
 using namespace std;

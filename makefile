@@ -34,7 +34,7 @@ OBJECTS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(SOURCES))
 # Compiler options
 CXX = g++
 CPPFLAGS = $(addprefix -I, $(HEADDIR)) -MMD -MP -lm
-CFLAGS = -O2 -Wall -std=c++11 -D"BENCHMARK=${BENCHMARK}" -g
+CFLAGS = -O2 -Wall -std=c++11 -D"BENCHMARK=${BENCHMARK}"
 LDFLAGS =
 LDLIBS =
 
