@@ -42,7 +42,7 @@ int main(int argc, char const *argv[]){
     }
 
 
-    // Generate distances matrix
+    // Generar matriz de distancias aplicando distancia euclidiana y almacenando el valor en ambas direcciones.
     float dist;
     for(size_t i = 0; i < n; ++i){
         for(size_t j = i+1; j < n; ++j){
@@ -57,45 +57,51 @@ int main(int argc, char const *argv[]){
     vector<float> transform_chance;
     Solution best;
 
-    // Initial gene pool of  GENE_POOL_SIZE solutions
+    // Generar GENE_POOL_SIZE soluciones completamente aleatorias y almacenar su puntaje el cual queda almacenado en el objeto solución.
     for (size_t i = 0; i < GENE_POOL_SIZE; i++){
         epoch.push_back(Solution(n, m));
         epoch[i].eval(weights, nodes, tmax, PENALTI);
     }
 
+    // Proceso de evolución que se repetirá MAX_GENERATIONS veces.
     for(size_t gen = 0; gen < MAX_GENERATIONS; ++gen){
+        // Ordenar soluciones para poder realizar elitismo
         sort(epoch.begin(), epoch.end());
-        if(!gen) cerr << epoch.back().getScore() << ";";
 
-        // Store global best solution to assure no quality loss
+        // Almacenar la mejor solución hasta la generación actual para asegurar que el algoritmo no baje de calidad.
         if (gen == 0 || best < epoch.back()) best = epoch.back();
 
-        // TOP_AMOUNT highest ranked solutions
+        // Seleccionar las TOP_AMOUNT soluciones con mayor puntaje.
         progenitors = vector<Solution>(epoch.rbegin()+1, epoch.rbegin()+TOP_AMOUNT);
         epoch = vector<Solution>(progenitors);
         epoch.reserve(GENE_POOL_SIZE-TOP_AMOUNT);
 
         progenitors.push_back(best);
 
-        // Cumulative score for rulette selection
+        // Generar arreglo con el puntaje acumulado de soluciones, así se tienen rangos que permiten aplicar la selección por ruleta
+        // Mejores soluciones tienen un rango más amplio.
         accum_score = vector<double>();
         accum_score.push_back(progenitors[0].getScore());
         for (size_t i = 1; i< progenitors.size(); ++i){
             accum_score.push_back(accum_score.back() + abs(progenitors[i].getScore()));
         }
 
-        
+        // Generar números aleatorios entre 0 y 1 para cada una de las soluciones progenitoras
         transform_chance = generateProbVector(progenitors.size());
 
         int select, select2;
 
-        // Crossing over
+        // Crossing over hasta llenar la generación.
         while (epoch.size() < GENE_POOL_SIZE-1){
+            // Se aplica busqueda binaria por bisección para encontrar el intervalo donde se encuentra una solución
+            // Aplicando así la selección por ruleta.
             select = getProgenitor(accum_score);
             while (transform_chance[select] > PC) select = getProgenitor(accum_score);
 
             select2 = getProgenitor(accum_score);
             while (transform_chance[select2] > PC || select == select2) select2 = getProgenitor(accum_score);
+
+            // Se generan 2 soluciones apliclando el cruze de intercambios de rutas y se evaluán cada una
 
             epoch.push_back(progenitors[select].crossOver(progenitors[select2]));
             epoch.back().eval(weights, nodes, tmax, PENALTI);
@@ -104,7 +110,9 @@ int main(int argc, char const *argv[]){
             epoch.back().eval(weights, nodes, tmax, PENALTI);
         }
 
-        // Mutation
+        // Para diversificar, se aplican mutadores según la probabilidad, se aplica solo un mutador máximo por solución.
+        // Estos pueden dversificar, reparar o mejorar soluciones.
+        // Se vuelven a evaluar las soluciones mutadas.
         transform_chance = generateProbVector(epoch.size());
         for (size_t i = 0; i < epoch.size(); i++) {
             if (transform_chance[i] < PM){
@@ -114,11 +122,14 @@ int main(int argc, char const *argv[]){
             
         }
 
+        // Para completar las GENE_POOL_SIZE se agrega la mejor solución global mutada para promover
+        // el encuentro de soluciones interesantes.
         epoch.push_back(best);
         epoch.back().mutate(weights, tmax);
         epoch.back().eval(weights, nodes, tmax, PENALTI);
     }
 
+    // Se selecciona la mejor solución de todas y es entregada.
     sort(epoch.begin(), epoch.end());
 
     cout << epoch.back().getScore() << '\n' << epoch.back();
