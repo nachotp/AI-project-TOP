@@ -1,1 +1,1 @@
-./top.exe < instances/Set_33_234/p3.4.q.txt > res.out
+./top.exe < instances/Set_33_234/p4.4.t.txt > res.out

@@ -4,7 +4,7 @@
 #include <vector>
 using namespace std;
 
-int getProgenitor(vector<double> &cum_score);
+int getProgenitor(vector<double> &accum_score);
 
 vector<float> generateProbVector(int n);
 

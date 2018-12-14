@@ -8,10 +8,10 @@
 
 using namespace std;
 
-int getProgenitor(vector<double> &cum_score){
-    if (cum_score.back() < 0) exit(1);
-    int select = rand() % ((int)cum_score.back());
-    return lower_bound(cum_score.begin(), cum_score.end(), select) - cum_score.begin();
+int getProgenitor(vector<double> &accum_score){
+    if (accum_score.back() < 0) exit(1);
+    int select = rand() % ((int)accum_score.back());
+    return lower_bound(accum_score.begin(), accum_score.end(), select) - accum_score.begin();
 }
 
 vector<float> generateProbVector(int n){
